@@ -1,0 +1,35 @@
+version: '3'
+services:
+  node:
+    container_name: calorie-backend
+    restart: unless-stopped
+    build: ./server
+    ports:
+      - 8001:80
+    volumes:
+      - ./server:/var/www/calories
+      - server-node-modules:/var/www/calories/node_modules
+    depends_on:
+      - mongo
+
+  client: 
+    container_name: calorie-client
+    restart: unless-stopped
+    build: ./client
+    ports:
+      - 8002:3000
+    volumes:
+      - ./client:/var/www/calories
+    depends_on:
+      - node
+
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb:/data/db
+volumes:
+  client-node-modules:
+  server-node-modules:
+  mongodb:
